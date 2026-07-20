@@ -1,40 +1,37 @@
 // middleware.js
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import User from "./app/models/User";
 
-export function proxy(request) {
+
+export async function proxy(request) {
   const authCookie = request.cookies.get("AUTH");
   const key = process.env.JWT_SECRET;
+  console.log(authCookie)
 
-  // No token or no secret configured -> not authenticated
-  if (!authCookie?.value || !key) {
-    return redirectToLogin(request);
+  const result = await jwt.verify(authCookie.value, key,);
+  console.log(result)
+  if(!result){
+    return NextResponse.json({success:false, message:"You are not logged in"});
   }
 
-  try {
-    const payload = jwt.verify(authCookie.value, key);
+ 
+  //
+  
+  
+  const res = NextResponse.next();
 
-    // Pass user info downstream via headers for route handlers to use
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-user-email", payload.email);
-    if (payload.id) requestHeaders.set("x-user-id", payload.id);
+  res.headers.set("x-userEmail", result.email);  // sending in the headers.
 
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-  } catch (error) {
-    console.error("Middleware auth error:", error.message);
-    return redirectToLogin(request);
-  }
+
+
+
+  return res;
+
 }
 
-function redirectToLogin(request) {
-  const loginUrl = new URL("/auth/login", request.url);
-  return NextResponse.redirect(loginUrl);
-}
+
 
 export const config = {
-  matcher: ["/users/:path*"], // only protects routes under /users/*
+  matcher: ["/api/users/:path*"]
 };

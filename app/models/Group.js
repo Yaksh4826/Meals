@@ -1,16 +1,9 @@
 import mongoose from "mongoose";
-import { unique } from "next/dist/build/utils";
-
-
-
-
-
-
 
 
 
 const GroupSchema = mongoose.Schema({
-    name: String,
+    GroupName: String,
     createdBy: { type: mongoose.Schema.ObjectId, ref: "user" },
     members: [{ type: mongoose.Schema.ObjectId, ref: "user" }],
     mealPlanId: { type: mongoose.Schema.ObjectId, ref: "mealPlan" },
