@@ -13,17 +13,18 @@ export async function connectDB() {
     throw new Error("MONGODB_URL is missing");
   }
 
-  // If already connected, return the cached connection
   if (cached.conn) {
     return cached.conn;
   }
 
-  // If a connection is already being created, wait for it
   if (!cached.promise) {
     cached.promise = mongoose
-      .connect(MONGODB_URL)
+      .connect(MONGODB_URL, {
+        dbName: "Meals", // <-- forces the database, no matter what's in the URI
+      })
       .then((mongooseInstance) => {
         console.log("Successfully connected to MongoDB server");
+        console.log("Using database:", mongooseInstance.connection.name);
         return mongooseInstance;
       })
       .catch((err) => {

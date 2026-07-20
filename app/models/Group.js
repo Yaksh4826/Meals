@@ -21,7 +21,8 @@ const GroupSchema = mongoose.Schema({
 
 
 
-})
+}
+)
 
 
 

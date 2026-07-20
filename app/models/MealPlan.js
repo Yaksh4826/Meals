@@ -31,7 +31,7 @@ const MealPlanSchema = mongoose.Schema({
 
 
 
-});
+} );
 
 
 export default mongoose.models.mealPlan || mongoose.model('mealPlan', MealPlanSchema);

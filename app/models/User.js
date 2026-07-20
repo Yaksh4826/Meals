@@ -10,7 +10,7 @@ const UserSchema = mongoose.Schema({
 
 
 
-})
+}, {database:"Meals"})
 
 
 
